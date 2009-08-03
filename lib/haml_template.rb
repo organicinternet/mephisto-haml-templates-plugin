@@ -5,6 +5,11 @@ class HamlTemplate < BaseDrop
   include UrlFilters
   include DropFilters
   include CoreFilters
+  include ActionView::Helpers::SanitizeHelper
+  extend ActionView::Helpers::SanitizeHelper::ClassMethods
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::FormTagHelper
 
   def initialize(site)
     @site_source = site
@@ -77,7 +82,7 @@ class HamlTemplate < BaseDrop
   def random_articles(section, limit = nil)
     liquify(*section.source.articles.find(:all, :order => 'RAND()', :limit => (limit || section.source.articles_per_page)))
   end
-
+  
 protected
   def do_include(template, context={})
     # need to save/restore @output since everything is using the same binding.
@@ -96,8 +101,8 @@ protected
       #   set_precompiled(template, engine.precompiled)
       # end
       engine.to_html(self, @locals.merge(context))
-    rescue
-      raise "HAML Error: #{$!}"
+    #rescue e
+    #  raise "HAML Error: #{$!}"
     end
   end
 
