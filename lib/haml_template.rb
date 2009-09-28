@@ -10,7 +10,6 @@ class HamlTemplate < BaseDrop
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::FormTagHelper
-  include MephistoPlugins::TagCloud
 
   def initialize(site)
     @site_source = site
