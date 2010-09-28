@@ -75,8 +75,11 @@ class HamlTemplate < BaseDrop
 
 # include template
 # <% include "template name" %>
-  def include(template, context={})
-    do_include(@site_source.find_preferred_template(:page, template+".haml"), context)
+  def include(template, context={}, type=nil)
+    begin
+      do_include(@site_source.find_preferred_template((type || :page), template+".haml"), context)
+    rescue MissingTemplateError
+    end
   end
 
   def random_articles(section, limit = nil)
@@ -89,7 +92,7 @@ protected
     # psq-TODO: if page caching is not working well enough, keeping a compiled version of the template could help
     # see ActionView::CompiledTemplates
     begin
-      options = {}
+      options = {:attr_wrapper => '"'}
       # options[:locals] = @locals.merge(context)
       options[:filename] ||= template
       # Precompiling is automatic in this version of Haml
